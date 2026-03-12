@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Job Details – Nexus</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">
+    <div class="logo-icon">⚡</div>
+    <span>NEXUS</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="index.html#jobs">Jobs</a></li>
+    <li><a href="postjob.html">Post a Job</a></li>
+    <li><a href="dashboard.html">Dashboard</a></li>
+  </ul>
+  <div class="nav-actions" id="nav-auth"></div>
+</nav>
+
+<!-- BREADCRUMB -->
+<div style="padding:88px 48px 0;max-width:1200px;margin:0 auto">
+  <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-muted)">
+    <a href="index.html" style="color:var(--text-muted);text-decoration:none">Home</a>
+    <span>›</span>
+    <a href="index.html#jobs" style="color:var(--text-muted);text-decoration:none">Jobs</a>
+    <span>›</span>
+    <span id="breadcrumb-title" style="color:var(--text)">Loading...</span>
+  </div>
+</div>
+
+<div class="detail-layout" id="detail-content">
+  <!-- Skeleton loaders -->
+  <div>
+    <div class="skeleton" style="height:200px;margin-bottom:24px;border-radius:var(--radius)"></div>
+    <div class="skeleton" style="height:400px;border-radius:var(--radius)"></div>
+  </div>
+  <div>
+    <div class="skeleton" style="height:360px;border-radius:var(--radius)"></div>
+  </div>
+</div>
+
+<!-- APPLY MODAL -->
+<div class="modal-overlay" id="applyModal" style="display:none" onclick="if(event.target===this)closeApply()">
+  <div class="modal">
+    <div class="modal-title">Apply for <span id="modal-job-title">Position</span> 🚀</div>
+    <div class="modal-subtitle">Review your details and submit your application</div>
+
+    <div id="apply-user-info" style="background:var(--glass);border:1px solid var(--card-border);border-radius:var(--radius-sm);padding:16px;margin-bottom:20px">
+      <div style="font-size:13px;color:var(--text-muted);margin-bottom:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px">Your Profile</div>
+      <div id="apply-user-details"></div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Cover Note (Optional)</label>
+      <textarea class="form-textarea" id="cover-note" placeholder="Why are you interested in this role? What makes you a great fit?"></textarea>
+    </div>
+
+    <div style="display:flex;gap:12px;margin-top:4px">
+      <button class="btn btn-primary" style="flex:1;justify-content:center" onclick="submitApplication()">✅ Submit Application</button>
+      <button class="btn btn-outline" onclick="closeApply()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- MORE JOBS SECTION -->
+<div style="padding:0 48px 80px;max-width:1200px;margin:0 auto" id="more-jobs-section" style="display:none">
+  <h2 class="section-title" style="margin-bottom:24px">Similar <span>Opportunities</span></h2>
+  <div class="jobs-grid" id="similar-jobs"></div>
+</div>
+
+<div id="toast-container"></div>
+<script src="app.js"></script>
+<script>
+const params = new URLSearchParams(location.search);
+const jobId = parseInt(params.get('id'));
+const job = JOBS.find(j => j.id === jobId);
+
+function renderJobDetail() {
+  if (!job) {
+    document.getElementById('detail-content').innerHTML = `
+      <div style="grid-column:1/-1;text-align:center;padding:80px">
+        <div style="font-size:60px;margin-bottom:20px">😕</div>
+        <h2 style="font-family:'Syne',sans-serif;font-size:28px;font-weight:800;margin-bottom:12px">Job Not Found</h2>
+        <p style="color:var(--text-muted);margin-bottom:24px">This listing may have expired or been removed.</p>
+        <a href="index.html#jobs" class="btn btn-primary">Browse All Jobs</a>
+      </div>`;
+    return;
+  }
+
+  document.title = `${job.title} at ${job.company} – Nexus`;
+  document.getElementById('breadcrumb-title').textContent = job.title;
+
+  const user = Auth.currentUser();
+  const isBookmarked = user?.bookmarks?.includes(job.id);
+  const alreadyApplied = user?.applications?.find(a => a.jobId === job.id);
+
+  document.getElementById('detail-content').innerHTML = `
+    <div class="detail-main">
+      <div class="detail-header">
+        <div class="detail-company-row">
+          <div class="detail-logo" style="background:${job.logoColor}22">${job.logo}</div>
+          <div>
+            <div class="detail-title">${job.title}</div>
+            <div class="detail-company">🏢 ${job.company} · 📍 ${job.location}</div>
+          </div>
+          <div style="margin-left:auto;display:flex;gap:10px">
+            <button class="btn btn-ghost btn-sm" onclick="toggleBookmarkDetail(${job.id},this)">
+              ${isBookmarked ? '🔖 Saved' : '🔗 Save Job'}
+            </button>
+            <button class="btn btn-outline btn-sm" onclick="shareJob()">🔗 Share</button>
+          </div>
+        </div>
+        <div class="job-tags">
+          <span class="tag ${job.mode.toLowerCase().replace(' ','-')}">${job.mode}</span>
+          <span class="tag ${job.type.toLowerCase().replace('-','')}">${job.type}</span>
+          <span class="tag">${job.category}</span>
+          <span class="tag">${job.experience} exp.</span>
+        </div>
+        <div class="detail-meta">
+          <div class="detail-meta-item">🕐 <strong>Posted</strong> ${job.posted}</div>
+          <div class="detail-meta-item">⏰ <strong>Deadline</strong> ${job.deadline}</div>
+          <div class="detail-meta-item">📍 <strong>Location</strong> ${job.location}</div>
+          <div class="detail-meta-item">📁 <strong>Domain</strong> ${job.category}</div>
+        </div>
+      </div>
+
+      <div class="detail-body">
+        <h3>📋 About the Role</h3>
+        <p>${job.description}</p>
+
+        <h3>🎯 Key Responsibilities</h3>
+        <ul>${job.responsibilities.map(r => `<li>${r}</li>`).join('')}</ul>
+
+        <h3>✅ Requirements</h3>
+        <ul>${job.requirements.map(r => `<li>${r}</li>`).join('')}</ul>
+
+        <h3>🛠️ Tech Stack / Skills</h3>
+        <div class="skills-list">${job.skills.map(s => `<span class="skill-tag">${s}</span>`).join('')}</div>
+
+        <h3>🏢 About ${job.company}</h3>
+        <p>${job.company} is a leading organization in the ${job.category} space, known for innovation, collaborative culture, and building world-class products. They offer competitive compensation, flexible work arrangements, and opportunities for rapid career growth.</p>
+
+        <h3>🎁 What We Offer</h3>
+        <ul>
+          <li>Competitive compensation: <strong>${job.salary}</strong></li>
+          <li>Flexible work arrangement: <strong>${job.mode}</strong></li>
+          <li>Opportunity to work with top talent</li>
+          <li>Health, dental, and vision insurance</li>
+          <li>Learning & development budget</li>
+          ${job.type === 'Internship' ? '<li>Certificate of completion & performance-based PPO</li>' : '<li>Equity & stock options for senior roles</li>'}
+        </ul>
+      </div>
+    </div>
+
+    <div class="detail-sidebar">
+      <div class="apply-card">
+        <div class="apply-salary">${job.salary}</div>
+        <div class="apply-salary-label">${job.type === 'Internship' ? 'Monthly Stipend' : 'Annual CTC'}</div>
+
+        ${alreadyApplied
+          ? `<div class="alert alert-success">✅ Already Applied<br><small>${new Date(alreadyApplied.appliedAt).toLocaleDateString('en-IN')}</small></div>
+             <button class="btn btn-success" onclick="downloadOffer()">📄 Download Offer Letter</button>`
+          : `<button class="btn btn-primary" onclick="openApply()">🚀 Apply Now</button>`
+        }
+        <button class="btn btn-outline" onclick="toggleBookmarkDetail(${job.id},this)" id="sidebar-bookmark">
+          ${isBookmarked ? '🔖 Saved' : '🔗 Save Job'}
+        </button>
+        <div class="deadline">⏰ Deadline: <strong>${job.deadline}</strong></div>
+
+        <div style="border-top:1px solid var(--card-border);margin-top:20px;padding-top:20px">
+          <div style="font-size:13px;font-weight:700;margin-bottom:12px;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-muted)">Job Summary</div>
+          ${[
+            ['💼', 'Type', job.type],
+            ['📍', 'Location', job.location],
+            ['🏠', 'Mode', job.mode],
+            ['📁', 'Domain', job.category],
+            ['⏱️', 'Experience', job.experience],
+            ['📅', 'Deadline', job.deadline]
+          ].map(([icon, label, val]) =>
+            `<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--card-border);font-size:13px">
+              <span style="color:var(--text-muted)">${icon} ${label}</span>
+              <span style="font-weight:600">${val}</span>
+            </div>`
+          ).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+
+  // Similar jobs
+  const similar = JOBS.filter(j => j.id !== job.id && (j.category === job.category || j.type === job.type)).slice(0, 3);
+  const moreSection = document.getElementById('more-jobs-section');
+  moreSection.style.display = 'block';
+  const user2 = Auth.currentUser();
+  const bm2 = user2?.bookmarks || [];
+  document.getElementById('similar-jobs').innerHTML = similar.map(j => jobCardHTML(j, bm2.includes(j.id))).join('');
+}
+
+function openApply() {
+  if (!Auth.isLoggedIn()) {
+    toast('Please login to apply for jobs', 'warning');
+    setTimeout(() => window.location.href = 'login.html', 1000);
+    return;
+  }
+  const u = Auth.currentUser();
+  document.getElementById('modal-job-title').textContent = job.title;
+  document.getElementById('apply-user-details').innerHTML = [
+    { icon: '👤', label: 'Name', val: u.name },
+    { icon: '✉️', label: 'Email', val: u.email },
+    { icon: '📱', label: 'Phone', val: u.phone || 'Not provided' },
+    { icon: '🎓', label: 'College', val: u.college || 'Not provided' },
+    { icon: '⚡', label: 'Skills', val: u.skills || 'Not provided' },
+  ].map(i => `<div style="display:flex;gap:10px;align-items:center;margin-bottom:8px;font-size:13px">
+    <span>${i.icon}</span><span style="color:var(--text-muted);width:60px">${i.label}:</span><span style="font-weight:600">${i.val}</span>
+  </div>`).join('') + `<a href="dashboard.html" onclick="closeApply()" style="font-size:12px;color:var(--accent)">✏️ Update profile</a>`;
+  document.getElementById('applyModal').style.display = 'flex';
+}
+
+function closeApply() {
+  document.getElementById('applyModal').style.display = 'none';
+}
+
+function submitApplication() {
+  const result = Auth.addApplication(job);
+  closeApply();
+  if (result === 'already') {
+    toast('You already applied for this job!', 'warning');
+  } else if (result) {
+    toast('Application submitted! 🎉', 'success');
+    setTimeout(() => {
+      if (confirm('🎉 Application submitted!\n\nWould you like to download your offer letter / confirmation PDF?')) {
+        const u = Auth.currentUser();
+        generateOfferLetter(u, job);
+      }
+      renderJobDetail();
+    }, 500);
+  } else {
+    toast('Please login to apply', 'error');
+    window.location.href = 'login.html';
+  }
+}
+
+function downloadOffer() {
+  const u = Auth.currentUser();
+  if (u) generateOfferLetter(u, job);
+}
+
+function toggleBookmarkDetail(jobId, btn) {
+  if (!Auth.isLoggedIn()) { toast('Please login to save jobs', 'warning'); return; }
+  const added = Auth.toggleBookmark(jobId);
+  const label = added ? '🔖 Saved' : '🔗 Save Job';
+  document.querySelectorAll('[id=sidebar-bookmark],[onclick*="toggleBookmarkDetail"]').forEach(b => b.textContent = label);
+  toast(added ? 'Job saved! 🔖' : 'Removed from saved', added ? 'success' : 'info');
+}
+
+function shareJob() {
+  if (navigator.share) {
+    navigator.share({ title: `${job.title} at ${job.company}`, url: location.href });
+  } else {
+    navigator.clipboard.writeText(location.href);
+    toast('Link copied to clipboard! 🔗', 'success');
+  }
+}
+
+renderJobDetail();
+</script>
+</body>
+</html>

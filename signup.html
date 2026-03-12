@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign Up – Nexus</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">
+    <div class="logo-icon">⚡</div>
+    <span>NEXUS</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+  </ul>
+  <div class="nav-actions">
+    <a href="login.html" class="btn btn-outline btn-sm">Log In</a>
+  </div>
+</nav>
+
+<div class="auth-page" style="padding-top:72px">
+  <!-- LEFT PANEL -->
+  <div class="auth-left">
+    <div class="auth-bg" style="background:radial-gradient(ellipse 80% 80% at 30% 50%, rgba(255,101,132,0.12) 0%, transparent 70%)"></div>
+    <div style="max-width:500px">
+      <div class="hero-badge" style="margin-bottom:32px;background:rgba(255,101,132,0.1);border-color:rgba(255,101,132,0.3);color:#ff8fa5">
+        <span class="dot" style="background:var(--accent2)"></span>
+        🎉 Free Forever — No Credit Card
+      </div>
+      <h1 style="font-family:'Syne',sans-serif;font-size:42px;font-weight:800;line-height:1.1;margin-bottom:20px">
+        Start your career<br><span style="background:linear-gradient(90deg,#fff,var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">journey today</span>
+      </h1>
+      <p style="color:var(--text-muted);font-size:16px;line-height:1.7;margin-bottom:48px">
+        Create your free Nexus account and unlock access to thousands of job openings, internship programs, and career resources.
+      </p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+        <div style="background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:20px;text-align:center">
+          <div style="font-size:28px;margin-bottom:8px">📋</div>
+          <div style="font-weight:700;font-size:14px">Easy Apply</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:4px">One-click applications</div>
+        </div>
+        <div style="background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:20px;text-align:center">
+          <div style="font-size:28px;margin-bottom:8px">📄</div>
+          <div style="font-weight:700;font-size:14px">Offer Letters</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:4px">Auto PDF generation</div>
+        </div>
+        <div style="background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:20px;text-align:center">
+          <div style="font-size:28px;margin-bottom:8px">🔔</div>
+          <div style="font-weight:700;font-size:14px">Job Alerts</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:4px">Real-time notifications</div>
+        </div>
+        <div style="background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:20px;text-align:center">
+          <div style="font-size:28px;margin-bottom:8px">📊</div>
+          <div style="font-weight:700;font-size:14px">Track Apps</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:4px">Full application dashboard</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="auth-right" style="overflow-y:auto">
+    <div style="margin-bottom:28px">
+      <h2 class="auth-title">Create Account 🚀</h2>
+      <p class="auth-subtitle">Join thousands of professionals on Nexus</p>
+    </div>
+
+    <div id="alertBox"></div>
+
+    <!-- ROLE SELECTOR -->
+    <div style="margin-bottom:24px">
+      <label class="form-label">I am a</label>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="role-btn active" id="role-candidate" onclick="selectRole('candidate')">
+          <div style="font-size:20px">🎓</div>
+          <div style="font-size:14px;font-weight:700">Job Seeker</div>
+          <div style="font-size:11px;color:var(--text-muted)">Find opportunities</div>
+        </div>
+        <div class="role-btn" id="role-employer" onclick="selectRole('employer')">
+          <div style="font-size:20px">🏢</div>
+          <div style="font-size:14px;font-weight:700">Employer</div>
+          <div style="font-size:11px;color:var(--text-muted)">Post jobs & hire</div>
+        </div>
+      </div>
+    </div>
+
+    <style>
+      .role-btn {
+        padding: 16px; border-radius: var(--radius-sm); border: 2px solid var(--card-border);
+        cursor: pointer; text-align: center; transition: all 0.2s; background: var(--glass);
+      }
+      .role-btn.active { border-color: var(--accent); background: rgba(108,99,255,0.1); }
+    </style>
+
+    <form id="signupForm" onsubmit="handleSignup(event)">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Full Name *</label>
+          <input type="text" id="name" class="form-input" placeholder="Rahul Sharma" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Phone Number</label>
+          <input type="tel" id="phone" class="form-input" placeholder="9876543210">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email Address *</label>
+        <input type="email" id="email" class="form-input" placeholder="you@example.com" required>
+      </div>
+      <div class="form-group" id="college-group">
+        <label class="form-label">College / University</label>
+        <input type="text" id="college" class="form-input" placeholder="IIT Bombay">
+      </div>
+      <div class="form-group" id="company-group" class="hidden" style="display:none">
+        <label class="form-label">Company Name *</label>
+        <input type="text" id="companyName" class="form-input" placeholder="Your company name">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Skills (comma-separated)</label>
+        <input type="text" id="skills" class="form-input" placeholder="React, Python, Figma...">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password *</label>
+        <div style="position:relative">
+          <input type="password" id="password" class="form-input" placeholder="Min. 6 characters" required minlength="6" style="padding-right:44px">
+          <span onclick="togglePwd('password',this)" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:18px">👁️</span>
+        </div>
+        <div id="strengthBar" style="margin-top:8px;display:none">
+          <div class="progress"><div class="progress-fill" id="strengthFill" style="width:0%"></div></div>
+          <div id="strengthLabel" style="font-size:11px;color:var(--text-muted);margin-top:4px"></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Confirm Password *</label>
+        <input type="password" id="confirmPassword" class="form-input" placeholder="Repeat password" required>
+      </div>
+
+      <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:24px">
+        <input type="checkbox" id="terms" required style="width:16px;height:16px;margin-top:2px;accent-color:var(--accent)">
+        <label for="terms" style="font-size:13px;color:var(--text-muted);cursor:pointer;line-height:1.5">
+          I agree to Nexus's <a href="#" style="color:var(--accent)">Terms of Service</a> and <a href="#" style="color:var(--accent)">Privacy Policy</a>. I consent to receiving career-related emails.
+        </label>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-full" style="justify-content:center;padding:14px;font-size:16px">
+        Create Account 🚀
+      </button>
+    </form>
+
+    <p class="auth-link">Already have an account? <a href="login.html">Sign in here</a></p>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<script src="app.js"></script>
+<script>
+if (Auth.isLoggedIn()) window.location.href = 'dashboard.html';
+
+let selectedRole = 'candidate';
+
+function selectRole(role) {
+  selectedRole = role;
+  document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('role-' + role).classList.add('active');
+  if (role === 'employer') {
+    document.getElementById('college-group').style.display = 'none';
+    document.getElementById('company-group').style.display = 'block';
+  } else {
+    document.getElementById('college-group').style.display = 'block';
+    document.getElementById('company-group').style.display = 'none';
+  }
+}
+
+function togglePwd(id, icon) {
+  const input = document.getElementById(id);
+  if (input.type === 'password') { input.type = 'text'; icon.textContent = '🙈'; }
+  else { input.type = 'password'; icon.textContent = '👁️'; }
+}
+
+document.getElementById('password').addEventListener('input', function() {
+  const val = this.value;
+  const bar = document.getElementById('strengthBar');
+  bar.style.display = val ? 'block' : 'none';
+  let strength = 0;
+  if (val.length >= 6) strength++;
+  if (val.length >= 10) strength++;
+  if (/[A-Z]/.test(val)) strength++;
+  if (/[0-9]/.test(val)) strength++;
+  if (/[^A-Za-z0-9]/.test(val)) strength++;
+  const pct = (strength / 5) * 100;
+  const fill = document.getElementById('strengthFill');
+  const label = document.getElementById('strengthLabel');
+  fill.style.width = pct + '%';
+  fill.style.background = pct < 40 ? '#ff4d6d' : pct < 70 ? 'var(--gold)' : 'var(--accent3)';
+  label.textContent = pct < 40 ? 'Weak password' : pct < 70 ? 'Medium strength' : 'Strong password ✓';
+  label.style.color = pct < 40 ? '#ff4d6d' : pct < 70 ? 'var(--gold)' : 'var(--accent3)';
+});
+
+function showAlert(msg, type = 'error') {
+  document.getElementById('alertBox').innerHTML = `<div class="alert alert-${type}">${msg}</div>`;
+}
+
+function handleSignup(e) {
+  e.preventDefault();
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+  const confirm = document.getElementById('confirmPassword').value;
+  const phone = document.getElementById('phone').value.trim();
+  const college = document.getElementById('college').value.trim();
+  const companyName = document.getElementById('companyName').value.trim();
+  const skills = document.getElementById('skills').value.trim();
+
+  if (password !== confirm) { showAlert('❌ Passwords do not match.'); return; }
+  if (password.length < 6) { showAlert('❌ Password must be at least 6 characters.'); return; }
+
+  const btn = e.target.querySelector('button[type=submit]');
+  btn.textContent = 'Creating account...';
+  btn.disabled = true;
+
+  setTimeout(() => {
+    const result = Auth.signup({ name, email, password, phone, role: selectedRole, college, companyName, skills });
+    if (result.ok) {
+      showAlert('✅ Account created successfully! Redirecting...', 'success');
+      toast('Welcome to Nexus! 🎉', 'success');
+      setTimeout(() => window.location.href = 'dashboard.html', 900);
+    } else {
+      showAlert('❌ ' + result.msg);
+      btn.textContent = 'Create Account 🚀';
+      btn.disabled = false;
+    }
+  }, 700);
+}
+</script>
+</body>
+</html>

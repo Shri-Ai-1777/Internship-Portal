@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nexus – Find Your Dream Career</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <a href="index.html" class="nav-logo">
+      <div class="logo-icon">⚡</div>
+      <span>NEXUS</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="index.html#jobs">Jobs</a></li>
+      <li><a href="index.html#internships">Internships</a></li>
+      <li><a href="postjob.html">Post a Job</a></li>
+      <li><a href="dashboard.html">Dashboard</a></li>
+    </ul>
+    <div class="nav-actions" id="nav-auth"></div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-bg-grid"></div>
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="dot"></span>
+        🔥 500+ New Opportunities This Week
+      </div>
+      <h1>
+        Land Your<br>
+        <span class="grad">Dream Job</span><br>
+        or Internship
+      </h1>
+      <p>Connect with top companies, explore internships, and accelerate your career journey. Thousands of opportunities
+        await — curated just for you.</p>
+      <div class="hero-cta">
+        <a href="#jobs" class="btn btn-primary btn-lg">🚀 Explore Jobs</a>
+        <a href="#internships" class="btn btn-outline btn-lg">🎓 Find Internships</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-item">
+          <span class="stat-number">12K+</span>
+          <span class="stat-label">Active Jobs</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">3K+</span>
+          <span class="stat-label">Companies</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">85K+</span>
+          <span class="stat-label">Placements</span>
+        </div>
+      </div>
+    </div>
+    <!-- Floating cards -->
+    <div style="position:absolute;right:5%;top:25%;animation:float 6s ease-in-out infinite;display:none;"
+      id="float-card">
+      <div class="job-card" style="max-width:280px;pointer-events:none;">
+        <div class="job-card-header">
+          <div class="company-logo" style="background:#6c63ff22;">🚀</div>
+        </div>
+        <div class="job-title">Senior React Dev</div>
+        <div class="job-company">🏢 TechNova · Remote</div>
+        <div class="job-tags"><span class="tag remote">Remote</span><span class="tag fulltime">Full-time</span></div>
+        <div class="job-card-footer"><span class="job-salary">₹14 LPA</span></div>
+      </div>
+    </div>
+  </section>
+
+  <style>
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0)
+      }
+
+      50% {
+        transform: translateY(-16px)
+      }
+    }
+
+    @media(min-width:1100px) {
+      #float-card {
+        display: block !important;
+      }
+    }
+  </style>
+
+  <!-- SEARCH -->
+  <div class="search-section">
+    <div class="search-box">
+      <span style="font-size:20px">🔍</span>
+      <input type="text" id="searchInput" placeholder="Search jobs, companies, skills..." />
+      <div class="search-divider"></div>
+      <select class="search-select" id="catFilter">
+        <option value="">All Categories</option>
+        <option>Engineering</option>
+        <option>Data Science</option>
+        <option>Design</option>
+        <option>AI/ML</option>
+        <option>Product</option>
+        <option>Marketing</option>
+      </select>
+      <div class="search-divider"></div>
+      <select class="search-select" id="typeFilter">
+        <option value="">All Types</option>
+        <option value="Full-time">Full-time</option>
+        <option value="Internship">Internship</option>
+      </select>
+      <button class="btn btn-primary" onclick="doSearch()">Search</button>
+    </div>
+  </div>
+
+  <!-- CATEGORIES -->
+  <section class="section" id="categories">
+    <div class="section-header">
+      <h2 class="section-title">Browse by <span>Category</span></h2>
+    </div>
+    <div class="categories-grid">
+      <div class="category-card" onclick="filterByCategory('Engineering')">
+        <div class="category-icon">💻</div>
+        <div class="category-name">Engineering</div>
+        <div class="category-count">340 openings</div>
+      </div>
+      <div class="category-card" onclick="filterByCategory('Data Science')">
+        <div class="category-icon">📊</div>
+        <div class="category-name">Data Science</div>
+        <div class="category-count">180 openings</div>
+      </div>
+      <div class="category-card" onclick="filterByCategory('Design')">
+        <div class="category-icon">🎨</div>
+        <div class="category-name">Design</div>
+        <div class="category-count">95 openings</div>
+      </div>
+      <div class="category-card" onclick="filterByCategory('AI/ML')">
+        <div class="category-icon">🤖</div>
+        <div class="category-name">AI / ML</div>
+        <div class="category-count">220 openings</div>
+      </div>
+      <div class="category-card" onclick="filterByCategory('Product')">
+        <div class="category-icon">📦</div>
+        <div class="category-name">Product</div>
+        <div class="category-count">75 openings</div>
+      </div>
+      <div class="category-card" onclick="filterByCategory('Marketing')">
+        <div class="category-icon">📈</div>
+        <div class="category-name">Marketing</div>
+        <div class="category-count">120 openings</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURED JOBS -->
+  <section class="section" id="jobs">
+    <div class="section-header">
+      <h2 class="section-title">Featured <span>Jobs</span></h2>
+      <div class="flex gap-2">
+        <button class="btn btn-ghost btn-sm" id="tab-all" onclick="filterJobs('all')">All</button>
+        <button class="btn btn-ghost btn-sm" id="tab-ft" onclick="filterJobs('Full-time')">Full-time</button>
+        <button class="btn btn-ghost btn-sm" id="tab-int" onclick="filterJobs('Internship')"
+          style="color:var(--accent2)">Internships</button>
+      </div>
+    </div>
+    <div class="jobs-grid" id="jobsGrid"></div>
+    <div style="text-align:center;margin-top:32px">
+      <button class="btn btn-outline" onclick="loadMore()">Load More Jobs ↓</button>
+    </div>
+  </section>
+
+  <!-- INTERNSHIPS -->
+  <section class="section" id="internships" style="background:var(--secondary);margin:0;padding:80px 48px;">
+    <div class="section-header">
+      <h2 class="section-title">Hot <span>Internships</span></h2>
+      <a href="index.html#jobs" class="btn btn-outline btn-sm">View All</a>
+    </div>
+    <div class="jobs-grid" id="internGrid"></div>
+  </section>
+
+  <!-- TOP COMPANIES -->
+  <section class="section">
+    <div class="section-header">
+      <h2 class="section-title">Top <span>Companies</span> Hiring</h2>
+    </div>
+    <div class="companies-row">
+      <div class="company-card">
+        <div class="company-logo" style="background:#6c63ff22">🚀</div>
+        <div>
+          <div class="company-name">TechNova Inc.</div>
+          <div class="company-openings">24 open roles</div>
+        </div>
+      </div>
+      <div class="company-card">
+        <div class="company-logo" style="background:#ff658422">📊</div>
+        <div>
+          <div class="company-name">Analytics Pro</div>
+          <div class="company-openings">8 internships</div>
+        </div>
+      </div>
+      <div class="company-card">
+        <div class="company-logo" style="background:#43e97b22">🎨</div>
+        <div>
+          <div class="company-name">Pixel Studio</div>
+          <div class="company-openings">12 design roles</div>
+        </div>
+      </div>
+      <div class="company-card">
+        <div class="company-logo" style="background:#60cdff22">☁️</div>
+        <div>
+          <div class="company-name">CloudBase</div>
+          <div class="company-openings">18 positions</div>
+        </div>
+      </div>
+      <div class="company-card">
+        <div class="company-logo" style="background:#9b8fff22">🤖</div>
+        <div>
+          <div class="company-name">NeuralWave AI</div>
+          <div class="company-openings">7 AI roles</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY NEXUS -->
+  <section class="section" style="background:var(--secondary);margin:0;padding:80px 48px;">
+    <div style="text-align:center;margin-bottom:56px;">
+      <h2 class="section-title">Why Choose <span>Nexus</span>?</h2>
+      <p style="color:var(--text-muted);margin-top:12px;font-size:16px">Everything you need to land your next
+        opportunity</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px;">
+      <div class="panel" style="text-align:center;padding:36px 28px;">
+        <div style="font-size:40px;margin-bottom:16px">🎯</div>
+        <h3 style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;margin-bottom:10px">Smart Matching</h3>
+        <p style="color:var(--text-muted);font-size:14px;line-height:1.7">AI-powered job recommendations tailored to
+          your skills, experience, and preferences.</p>
+      </div>
+      <div class="panel" style="text-align:center;padding:36px 28px;">
+        <div style="font-size:40px;margin-bottom:16px">⚡</div>
+        <h3 style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;margin-bottom:10px">Instant Apply</h3>
+        <p style="color:var(--text-muted);font-size:14px;line-height:1.7">One-click applications with your saved
+          profile. Get noticed by recruiters faster.</p>
+      </div>
+      <div class="panel" style="text-align:center;padding:36px 28px;">
+        <div style="font-size:40px;margin-bottom:16px">📄</div>
+        <h3 style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;margin-bottom:10px">Offer Letter PDF
+        </h3>
+        <p style="color:var(--text-muted);font-size:14px;line-height:1.7">Automatically generate a professional PDF
+          offer letter upon successful application.</p>
+      </div>
+      <div class="panel" style="text-align:center;padding:36px 28px;">
+        <div style="font-size:40px;margin-bottom:16px">🔔</div>
+        <h3 style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;margin-bottom:10px">Real-time Alerts
+        </h3>
+        <p style="color:var(--text-muted);font-size:14px;line-height:1.7">Get notified instantly when new jobs matching
+          your profile are posted.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA BANNER -->
+  <section class="section" style="text-align:center;padding:100px 48px;">
+    <div style="max-width:600px;margin:0 auto;">
+      <h2 style="font-family:'Syne',sans-serif;font-size:42px;font-weight:800;margin-bottom:20px;line-height:1.1;">
+        Ready to Start<br>Your Journey? 🚀
+      </h2>
+      <p style="color:var(--text-muted);font-size:17px;margin-bottom:36px">Join 85,000+ professionals who found their
+        perfect role through Nexus.</p>
+      <a href="signup.html" class="btn btn-primary btn-lg">Create Free Account →</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo" style="text-decoration:none;display:inline-flex">
+          <div class="logo-icon">⚡</div>
+          <span>NEXUS</span>
+        </a>
+        <p>The premier job and internship platform connecting talent with opportunity. Your career starts here.</p>
+      </div>
+      <div class="footer-col">
+        <h4>For Candidates</h4>
+        <ul>
+          <li><a href="index.html#jobs">Browse Jobs</a></li>
+          <li><a href="index.html#internships">Internships</a></li>
+          <li><a href="dashboard.html">Dashboard</a></li>
+          <li><a href="signup.html">Create Account</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>For Employers</h4>
+        <ul>
+          <li><a href="postjob.html">Post a Job</a></li>
+          <li><a href="#">Talent Search</a></li>
+          <li><a href="#">Pricing Plans</a></li>
+          <li><a href="#">Recruiter Tools</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="#">About Us</a></li>
+          <li><a href="https://www.linkedin.com/in/shreyas-ajay-didolkar-a6746631b/">Linkdin</a></li>
+          <li><a href="https://www.instagram.com/shreyas_a_d?igsh=MTVkazYxcGMzdTJyYw%3D%3D">Instagram</a></li>
+          <li><a href="./file/nexhub_terms_and_conditions.pdf">Terms of Service</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Nexus Job Portal. All rights reserved.</span>
+      <span>Made with  for ambitious professionals</span>
+    </div>
+  </footer>
+
+  <div id="toast-container"></div>
+
+  <script src="app.js"></script>
+  <script>
+    let allJobs = JOBS;
+    let currentFilter = 'all';
+    let page = 1;
+
+    function renderJobs(jobs, containerId, limit = 6) {
+      const user = Auth.currentUser();
+      const bookmarks = user?.bookmarks || [];
+      const container = document.getElementById(containerId);
+      if (!jobs.length) {
+        container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🔍</div><h3>No jobs found</h3><p>Try adjusting your filters</p></div>';
+        return;
+      }
+      container.innerHTML = jobs.slice(0, limit).map(j => jobCardHTML(j, bookmarks.includes(j.id))).join('');
+    }
+
+    function filterJobs(type) {
+      currentFilter = type;
+      let jobs = type === 'all' ? allJobs : allJobs.filter(j => j.type === type);
+      renderJobs(jobs, 'jobsGrid');
+    }
+
+    function filterByCategory(cat) {
+      document.getElementById('catFilter').value = cat;
+      document.getElementById('searchInput').value = '';
+      const jobs = allJobs.filter(j => j.category === cat);
+      renderJobs(jobs, 'jobsGrid', 8);
+      document.getElementById('jobs').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function doSearch() {
+      const q = document.getElementById('searchInput').value.toLowerCase();
+      const cat = document.getElementById('catFilter').value;
+      const type = document.getElementById('typeFilter').value;
+      let jobs = allJobs.filter(j => {
+        const matchQ = !q || j.title.toLowerCase().includes(q) || j.company.toLowerCase().includes(q) || j.skills.some(s => s.toLowerCase().includes(q));
+        const matchCat = !cat || j.category === cat;
+        const matchType = !type || j.type === type;
+        return matchQ && matchCat && matchType;
+      });
+      renderJobs(jobs, 'jobsGrid', 8);
+      document.getElementById('jobs').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function loadMore() {
+      page++;
+      const user = Auth.currentUser();
+      const bookmarks = user?.bookmarks || [];
+      const container = document.getElementById('jobsGrid');
+      const extraJobs = allJobs.slice(0, 8);
+      container.innerHTML += extraJobs.map(j => jobCardHTML(j, bookmarks.includes(j.id))).join('');
+      toast('More jobs loaded!', 'info');
+    }
+
+    document.getElementById('searchInput').addEventListener('keypress', e => { if (e.key === 'Enter') doSearch(); });
+
+    // Initial render
+    renderJobs(allJobs.filter(j => j.type === 'Full-time' || true), 'jobsGrid', 6);
+    renderJobs(allJobs.filter(j => j.type === 'Internship'), 'internGrid', 4);
+  </script>
+</body>
+
+</html>
