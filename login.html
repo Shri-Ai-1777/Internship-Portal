@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login – Nexus</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">
+    <div class="logo-icon">⚡</div>
+    <span>NEXUS</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+  </ul>
+  <div class="nav-actions">
+    <a href="signup.html" class="btn btn-primary btn-sm">Create Account</a>
+  </div>
+</nav>
+
+<div class="auth-page" style="padding-top:72px">
+  <!-- LEFT PANEL -->
+  <div class="auth-left">
+    <div class="auth-bg"></div>
+    <div style="max-width:500px">
+      <div class="hero-badge" style="margin-bottom:32px">
+        <span class="dot"></span>
+        🔒 Secure & Encrypted Login
+      </div>
+      <h1 style="font-family:'Syne',sans-serif;font-size:42px;font-weight:800;line-height:1.1;margin-bottom:20px">
+        Welcome back to<br><span style="background:linear-gradient(90deg,#fff,var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">your career hub</span>
+      </h1>
+      <p style="color:var(--text-muted);font-size:16px;line-height:1.7;margin-bottom:48px">
+        Access thousands of job listings, track your applications, and take the next step in your professional journey.
+      </p>
+      <div class="feature-list">
+        <div class="feature-item">
+          <div class="feature-icon">🎯</div>
+          <div class="feature-text">
+            <h4>Personalized Recommendations</h4>
+            <p>AI-powered job matching based on your skills and preferences</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">📊</div>
+          <div class="feature-text">
+            <h4>Application Tracker</h4>
+            <p>Monitor your job applications in real-time from your dashboard</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">📄</div>
+          <div class="feature-text">
+            <h4>Instant Offer Letters</h4>
+            <p>Get PDF offer letters generated automatically upon acceptance</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="auth-right">
+    <div style="margin-bottom:36px">
+      <h2 class="auth-title">Sign in 👋</h2>
+      <p class="auth-subtitle">Enter your credentials to access your account</p>
+    </div>
+
+    <div id="alertBox"></div>
+
+    <div class="auth-social">
+      <button class="btn-social" onclick="demoLogin()">🧪 Use Demo Account</button>
+    </div>
+
+    <div class="auth-divider">or sign in with email</div>
+
+    <form id="loginForm" onsubmit="handleLogin(event)">
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <input type="email" id="email" class="form-input" placeholder="you@example.com" required autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label class="form-label" style="display:flex;justify-content:space-between">
+          Password
+          <a href="#" style="color:var(--accent);font-size:12px;text-transform:none;font-weight:500">Forgot password?</a>
+        </label>
+        <div style="position:relative">
+          <input type="password" id="password" class="form-input" placeholder="Enter your password" required autocomplete="current-password" style="padding-right:44px">
+          <span onclick="togglePwd('password',this)" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:18px;user-select:none" id="eye1">👁️</span>
+        </div>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:24px">
+        <input type="checkbox" id="remember" style="width:16px;height:16px;accent-color:var(--accent)">
+        <label for="remember" style="font-size:14px;color:var(--text-muted);cursor:pointer">Remember me for 30 days</label>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-full" style="justify-content:center;padding:14px;font-size:16px">
+        Sign In →
+      </button>
+    </form>
+
+    <p class="auth-link">Don't have an account? <a href="signup.html">Create one free</a></p>
+
+    <div style="margin-top:32px;padding-top:24px;border-top:1px solid var(--card-border)">
+      <p style="font-size:12px;color:var(--text-muted);text-align:center;line-height:1.6">
+        By signing in, you agree to our <a href="#" style="color:var(--accent)">Terms of Service</a> and <a href="#" style="color:var(--accent)">Privacy Policy</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<script src="app.js"></script>
+<script>
+// Redirect if already logged in
+if (Auth.isLoggedIn()) window.location.href = 'dashboard.html';
+
+function togglePwd(id, icon) {
+  const input = document.getElementById(id);
+  if (input.type === 'password') { input.type = 'text'; icon.textContent = '🙈'; }
+  else { input.type = 'password'; icon.textContent = '👁️'; }
+}
+
+function showAlert(msg, type = 'error') {
+  document.getElementById('alertBox').innerHTML = `<div class="alert alert-${type}">${msg}</div>`;
+}
+
+function demoLogin() {
+  // Create demo user if not exists
+  const result = Auth.signup({
+    name: 'Rahul Sharma',
+    email: 'demo@nexus.in',
+    password: 'demo1234',
+    phone: '9876543210',
+    role: 'candidate',
+    college: 'IIT Bombay',
+    skills: 'React, JavaScript, Node.js'
+  });
+  if (!result.ok) Auth.login('demo@nexus.in', 'demo1234');
+  toast('Demo login successful! 🎉', 'success');
+  setTimeout(() => window.location.href = 'dashboard.html', 800);
+}
+
+function handleLogin(e) {
+  e.preventDefault();
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+  const btn = e.target.querySelector('button[type=submit]');
+
+  btn.textContent = 'Signing in...';
+  btn.disabled = true;
+
+  setTimeout(() => {
+    const result = Auth.login(email, password);
+    if (result.ok) {
+      showAlert('✅ Login successful! Redirecting...', 'success');
+      toast('Welcome back! 🎉', 'success');
+      setTimeout(() => window.location.href = 'dashboard.html', 800);
+    } else {
+      showAlert('❌ ' + result.msg);
+      btn.textContent = 'Sign In →';
+      btn.disabled = false;
+    }
+  }, 600);
+}
+</script>
+</body>
+</html>

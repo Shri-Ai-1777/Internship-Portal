@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Post a Job – Nexus</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">
+    <div class="logo-icon">⚡</div>
+    <span>NEXUS</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="index.html#jobs">Jobs</a></li>
+    <li><a href="postjob.html" class="active">Post a Job</a></li>
+    <li><a href="dashboard.html">Dashboard</a></li>
+  </ul>
+  <div class="nav-actions" id="nav-auth"></div>
+</nav>
+
+<div class="postjob-page">
+  <div class="postjob-header">
+    <div class="hero-badge" style="margin-bottom:20px">
+      <span class="dot"></span>
+      🏢 For Employers & Recruiters
+    </div>
+    <h1>Post a Job or Internship</h1>
+    <p>Reach thousands of qualified candidates and find your next great hire through Nexus.</p>
+  </div>
+
+  <div id="alertBox"></div>
+
+  <div style="display:grid;grid-template-columns:1fr 340px;gap:28px;align-items:start">
+    <div class="postjob-card">
+      <form id="postJobForm" onsubmit="handlePost(event)">
+
+        <div class="postjob-section">
+          <div class="postjob-section-title">
+            <span class="step">1</span> Company Information
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Company Name *</label>
+              <input type="text" id="companyName" class="form-input" placeholder="e.g. TechNova Inc." required oninput="updatePreview()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Company Website</label>
+              <input type="url" id="companyUrl" class="form-input" placeholder="https://yourcompany.com">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Company Email *</label>
+              <input type="email" id="companyEmail" class="form-input" placeholder="hr@yourcompany.com" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Company Size</label>
+              <select id="companySize" class="form-select">
+                <option>1–50 employees</option>
+                <option>51–200 employees</option>
+                <option selected>201–1000 employees</option>
+                <option>1000+ employees</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Company Emoji / Logo Icon</label>
+            <div style="display:flex;gap:12px;flex-wrap:wrap" id="emoji-picker">
+              🚀 🏢 💼 🎯 📊 🎨 ☁️ 🤖 ⚡ 🔬 📱 🌐 💡 🏗️ 🎓 🌟
+            </div>
+            <input type="text" id="companyLogo" class="form-input" style="margin-top:8px" value="🏢" placeholder="Paste emoji or leave default" oninput="updatePreview()">
+          </div>
+        </div>
+
+        <!-- SECTION 2: Job Details -->
+        <div class="postjob-section">
+          <div class="postjob-section-title">
+            <span class="step">2</span> Job Details
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Job Title *</label>
+              <input type="text" id="jobTitle" class="form-input" placeholder="e.g. Frontend Developer" required oninput="updatePreview()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Job Category *</label>
+              <select id="jobCategory" class="form-select" required onchange="updatePreview()">
+                <option value="">Select category</option>
+                <option>Engineering</option>
+                <option>Data Science</option>
+                <option>Design</option>
+                <option>AI/ML</option>
+                <option>Product</option>
+                <option>Marketing</option>
+                <option>Sales</option>
+                <option>Operations</option>
+                <option>Finance</option>
+                <option>HR</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Employment Type *</label>
+              <select id="jobType" class="form-select" required onchange="updatePreview()">
+                <option value="">Select type</option>
+                <option value="Full-time">Full-time</option>
+                <option value="Part-time">Part-time</option>
+                <option value="Contract">Contract</option>
+                <option value="Internship">Internship</option>
+                <option value="Freelance">Freelance</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Work Mode *</label>
+              <select id="workMode" class="form-select" required onchange="updatePreview()">
+                <option value="">Select mode</option>
+                <option>Remote</option>
+                <option>Onsite</option>
+                <option>Hybrid</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Location / City</label>
+              <input type="text" id="location" class="form-input" placeholder="Mumbai, Bengaluru, Remote..." oninput="updatePreview()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Experience Required</label>
+              <input type="text" id="experience" class="form-input" placeholder="e.g. 2–4 years / Fresher">
+            </div>
+          </div>
+        </div>
+
+        <div class="postjob-section">
+          <div class="postjob-section-title">
+            <span class="step">3</span> Compensation & Benefits
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" id="salary-label">Salary / CTC *</label>
+              <input type="text" id="salary" class="form-input" placeholder="e.g. ₹8–14 LPA" required oninput="updatePreview()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Application Deadline</label>
+              <input type="date" id="deadline" class="form-input">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Benefits & Perks</label>
+            <div style="display:flex;flex-wrap:wrap;gap:10px" id="perks-container">
+              <label class="perk-check"><input type="checkbox" value="Health Insurance"> 🏥 Health Insurance</label>
+              <label class="perk-check"><input type="checkbox" value="Flexible Hours"> ⏰ Flexible Hours</label>
+              <label class="perk-check"><input type="checkbox" value="Remote Work"> 🏠 Remote Work</label>
+              <label class="perk-check"><input type="checkbox" value="Stock Options"> 📈 Stock Options</label>
+              <label class="perk-check"><input type="checkbox" value="Learning Budget"> 📚 Learning Budget</label>
+              <label class="perk-check"><input type="checkbox" value="Team Lunches"> 🍕 Team Lunches</label>
+              <label class="perk-check"><input type="checkbox" value="Gym Membership"> 💪 Gym</label>
+              <label class="perk-check"><input type="checkbox" value="PPO Opportunity"> 🎓 PPO (for interns)</label>
+            </div>
+          </div>
+        </div>
+        <style>
+          .perk-check { display:flex;align-items:center;gap:6px;padding:8px 14px;border:1px solid var(--card-border);border-radius:100px;font-size:13px;cursor:pointer;transition:all 0.2s;user-select:none; }
+          .perk-check:hover { border-color:var(--accent);background:rgba(108,99,255,0.05); }
+          .perk-check input[type=checkbox] { accent-color:var(--accent); }
+        </style>
+
+        <div class="postjob-section">
+          <div class="postjob-section-title">
+            <span class="step">4</span> Job Description
+          </div>
+          <div class="form-group">
+            <label class="form-label">About the Role *</label>
+            <textarea id="description" class="form-textarea" style="min-height:120px" required placeholder="Describe what this role is about, the team, and the challenges..."></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Key Responsibilities</label>
+            <textarea id="responsibilities" class="form-textarea" placeholder="• Build scalable REST APIs&#10;• Collaborate with design teams&#10;• Conduct code reviews..."></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Requirements & Qualifications</label>
+            <textarea id="requirements" class="form-textarea" placeholder="• 2+ years of experience&#10;• Strong communication skills&#10;• Bachelor's in CS or equivalent..."></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Required Skills (comma-separated)</label>
+            <input type="text" id="skills" class="form-input" placeholder="React, Python, AWS, Figma..." oninput="updatePreview()">
+          </div>
+        </div>
+
+        <div style="display:flex;gap:16px">
+          <button type="submit" class="btn btn-primary btn-lg" style="flex:1;justify-content:center">
+            🚀 Post Job Listing
+          </button>
+          <button type="button" class="btn btn-outline btn-lg" onclick="resetForm()">Reset</button>
+        </div>
+      </form>
+    </div>
+
+    <div style="position:sticky;top:100px">
+      <div style="font-size:13px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px">📋 Live Preview</div>
+      <div id="job-preview" class="job-card" style="pointer-events:none">
+        <div class="job-card-header">
+          <div class="company-logo" id="prev-logo" style="background:#6c63ff22">🏢</div>
+          <div class="job-bookmark">🔗</div>
+        </div>
+        <div class="job-title" id="prev-title">Job Title</div>
+        <div class="job-company" id="prev-company">🏢 Company · Location</div>
+        <div class="job-tags">
+          <span class="tag" id="prev-mode">Mode</span>
+          <span class="tag" id="prev-type">Type</span>
+          <span class="tag" id="prev-cat">Category</span>
+        </div>
+        <div class="job-card-footer">
+          <span class="job-salary" id="prev-salary">Compensation</span>
+          <span class="job-date">🕐 Just now</span>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:20px">
+        <div class="panel-title" style="font-size:14px">📦 Posting Plans</div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="padding:14px;border:2px solid var(--accent);border-radius:10px;background:rgba(108,99,255,0.08)">
+            <div style="font-weight:700;font-size:14px;margin-bottom:4px">⚡ Standard <span style="color:var(--accent3);float:right">FREE</span></div>
+            <div style="font-size:12px;color:var(--text-muted)">30-day listing, standard visibility</div>
+          </div>
+          <div style="padding:14px;border:1px solid var(--card-border);border-radius:10px;">
+            <div style="font-weight:700;font-size:14px;margin-bottom:4px">🌟 Featured <span style="color:var(--gold);float:right">₹999</span></div>
+            <div style="font-size:12px;color:var(--text-muted)">60-day listing, top placement, highlighted</div>
+          </div>
+          <div style="padding:14px;border:1px solid var(--card-border);border-radius:10px;">
+            <div style="font-weight:700;font-size:14px;margin-bottom:4px">👑 Premium <span style="color:var(--accent2);float:right">₹2999</span></div>
+            <div style="font-size:12px;color:var(--text-muted)">90-day, featured + email blast to 10K+ candidates</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="successModal" style="display:none">
+  <div class="modal" style="text-align:center">
+    <div style="font-size:64px;margin-bottom:20px">🎉</div>
+    <div class="modal-title">Job Posted Successfully!</div>
+    <div class="modal-subtitle">Your listing is now live and visible to thousands of candidates on Nexus.</div>
+    <div id="posted-job-preview" style="margin:24px 0"></div>
+    <div style="display:flex;gap:12px">
+      <a href="dashboard.html" class="btn btn-primary" style="flex:1;justify-content:center">Go to Dashboard</a>
+      <a href="index.html#jobs" class="btn btn-outline" style="flex:1;justify-content:center">View All Jobs</a>
+    </div>
+    <button class="btn btn-ghost btn-sm" onclick="document.getElementById('successModal').style.display='none';resetForm()" style="margin-top:12px;width:100%;justify-content:center">Post Another Job</button>
+  </div>
+</div>
+
+
+
+<footer class="footer">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo" style="text-decoration:none;display:inline-flex">
+          <div class="logo-icon">⚡</div>
+          <span>NEXUS</span>
+        </a>
+        <p>The premier job and internship platform connecting talent with opportunity. Your career starts here.</p>
+      </div>
+      <div class="footer-col">
+        <h4>For Candidates</h4>
+        <ul>
+          <li><a href="index.html#jobs">Browse Jobs</a></li>
+          <li><a href="index.html#internships">Internships</a></li>
+          <li><a href="dashboard.html">Dashboard</a></li>
+          <li><a href="signup.html">Create Account</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>For Employers</h4>
+        <ul>
+          <li><a href="postjob.html">Post a Job</a></li>
+          <li><a href="login.html">Login</a></li>
+        <li><a href="signup.html">open new Account</a></li>
+          <li><a href="https://www.linkedin.com/in/shreyas-ajay-didolkar-a6746631b/">contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="#">About Us</a></li>
+          <li><a href="https://www.linkedin.com/in/shreyas-ajay-didolkar-a6746631b/">Linkdin</a></li>
+          <li><a href="https://www.instagram.com/shreyas_a_d?igsh=MTVkazYxcGMzdTJyYw%3D%3D">Instagram</a></li>
+          <li><a href="./file/nexhub_terms_and_conditions.pdf">Terms of Service</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Nexus Job Portal. All rights reserved.</span>
+      <span>Made with  for ambitious professionals</span>
+    </div>
+  </footer>
+
+<div id="toast-container"></div>
+<script src="app.js"></script>
+<script>
+function updatePreview() {
+  const logo = document.getElementById('companyLogo').value || '🏢';
+  const title = document.getElementById('jobTitle').value || 'Job Title';
+  const company = document.getElementById('companyName').value || 'Company';
+  const location = document.getElementById('location').value || 'Location';
+  const mode = document.getElementById('workMode').value || 'Mode';
+  const type = document.getElementById('jobType').value || 'Type';
+  const cat = document.getElementById('jobCategory').value || 'Category';
+  const salary = document.getElementById('salary').value || 'Compensation';
+
+  document.getElementById('prev-logo').textContent = logo;
+  document.getElementById('prev-title').textContent = title;
+  document.getElementById('prev-company').innerHTML = `🏢 ${company} · ${location}`;
+  document.getElementById('prev-mode').textContent = mode;
+  document.getElementById('prev-type').textContent = type;
+  document.getElementById('prev-cat').textContent = cat;
+  document.getElementById('prev-salary').textContent = salary;
+
+  if (type === 'Internship') document.getElementById('salary-label').textContent = 'Monthly Stipend *';
+  else document.getElementById('salary-label').textContent = 'Salary / CTC *';
+}
+
+
+document.getElementById('emoji-picker').addEventListener('click', e => {
+  const ch = e.target.textContent.trim();
+  if (ch) { document.getElementById('companyLogo').value = ch; updatePreview(); }
+});
+
+function handlePost(e) {
+  e.preventDefault();
+  const btn = e.target.querySelector('button[type=submit]');
+  btn.textContent = 'Posting...'; btn.disabled = true;
+
+  const newJob = {
+    id: Date.now(),
+    title: document.getElementById('jobTitle').value,
+    company: document.getElementById('companyName').value,
+    logo: document.getElementById('companyLogo').value || '🏢',
+    logoColor: '#6c63ff',
+    category: document.getElementById('jobCategory').value,
+    type: document.getElementById('jobType').value,
+    mode: document.getElementById('workMode').value,
+    salary: document.getElementById('salary').value,
+    location: document.getElementById('location').value || 'Remote',
+    experience: document.getElementById('experience').value || 'Open',
+    deadline: document.getElementById('deadline').value || '2025-08-01',
+    posted: 'Just now',
+    featured: false,
+    description: document.getElementById('description').value,
+    responsibilities: document.getElementById('responsibilities').value.split('\n').filter(Boolean),
+    requirements: document.getElementById('requirements').value.split('\n').filter(Boolean),
+    skills: document.getElementById('skills').value.split(',').map(s => s.trim()).filter(Boolean)
+  };
+  const postedJobs = Store.get('postedJobs') || [];
+  postedJobs.push(newJob);
+  Store.set('postedJobs', postedJobs);
+
+  setTimeout(() => {
+    document.getElementById('posted-job-preview').innerHTML = `
+      <div style="background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:20px;text-align:left">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+          <div style="width:48px;height:48px;border-radius:12px;background:#6c63ff22;display:flex;align-items:center;justify-content:center;font-size:22px">${newJob.logo}</div>
+          <div>
+            <div style="font-weight:700;font-size:16px">${newJob.title}</div>
+            <div style="font-size:13px;color:var(--text-muted)">${newJob.company} · ${newJob.location}</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <span class="tag">${newJob.type}</span>
+          <span class="tag">${newJob.mode}</span>
+          <span class="tag">${newJob.category}</span>
+        </div>
+        <div style="margin-top:12px;font-size:15px;font-weight:700;color:var(--accent3)">${newJob.salary}</div>
+      </div>`;
+    document.getElementById('successModal').style.display = 'flex';
+    toast('Job posted successfully! 🎉', 'success');
+    btn.textContent = '🚀 Post Job Listing'; btn.disabled = false;
+  }, 1000);
+}
+
+function resetForm() {
+  document.getElementById('postJobForm').reset();
+  updatePreview();
+}
+const d = new Date(); d.setMonth(d.getMonth() + 1);
+document.getElementById('deadline').value = d.toISOString().split('T')[0];
+</script>
+</body>
+</html>
